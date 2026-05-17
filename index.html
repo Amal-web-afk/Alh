@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ALH Perfumes | Authentic Crafted Luxury</title>
+  <meta name="description" content="State-of-the-art pure luxury perfume oils handcrafted in Kerala.">
+  <link rel="stylesheet" href="./index.css?v=2">
+  <!-- Razorpay Web Checkout Integration SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+
+  <!-- Custom Tracking Ring (Desktop PC screens) -->
+  <div class="pc-cursor-dot" id="cursor-dot"></div>
+  <div class="pc-cursor-ring" id="cursor-ring"></div>
+
+  <!-- Loading Animation Curtain -->
+  <div class="screen-fade-curtain" id="screen-fade-curtain">
+    <span class="curtain-brand">ALH</span>
+  </div>
+
+  <!-- ==================== NEXT-GENERATION FLOATING CAPSULE NAVBAR ==================== -->
+  <div class="capsule-nav-wrapper">
+    <header class="capsule-navbar" id="capsule-header-nav">
+
+      <!-- Micro-animated Logo Badge -->
+      <a href="#" class="capsule-brand cursor-hover" onclick="app.showScreen('home'); return false;">
+        ALH <span class="capsule-brand-dot"></span>
+      </a>
+
+      <!-- Embedded Top Pill Navigation Switch (Desktop Viewports) -->
+      <div class="capsule-links-row">
+        <button class="capsule-link-btn active cursor-hover" id="nav-pill-home"
+          onclick="app.showScreen('home')">Showcase</button>
+        <button class="capsule-link-btn cursor-hover" id="nav-pill-about" onclick="app.showScreen('about')">Our
+          Story</button>
+        <button class="capsule-link-btn cursor-hover" id="nav-pill-account"
+          onclick="app.routeAccountFlow()">Account</button>
+      </div>
+
+      <!-- Compact Utilities (Search & Bag Pills) -->
+      <div class="capsule-tools">
+        <button class="capsule-action-pill cursor-hover" onclick="app.openSearchOverlay()" title="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span>Search</span>
+        </button>
+
+        <button class="capsule-action-pill cursor-hover" id="nav-bag-pill-btn" style="position: relative;"
+          onclick="app.openDrawer('bag')" title="Your Bag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Bag</span>
+          <span class="capsule-badge" id="nav-bag-count">0</span>
+        </button>
+      </div>
+
+    </header>
+  </div>
+
+
+  <!-- ==================== SCREEN 1: HOME ==================== -->
+  <main class="view-pane active" id="screen-home">
+
+    <!-- DESKTOP PC SPEC -->
+    <div class="desktop-hero-layout">
+      <div class="watermark-background" id="pc-watermark-text">OUDH</div>
+
+      <div class="hero-info-section">
+        <span class="scent-step-tag stagger-1" id="pc-step-label">01 / 03</span>
+        <h1 class="scent-main-heading cursor-hover stagger-2" id="pc-title-label" onclick="app.openSearchOverlay()">Oud Imperial
+        </h1>
+        <p class="scent-body-text stagger-3" id="pc-desc-label">Rich aged oudh oil balanced with soft saffron and clean white
+          amber. Simple, premium, and very long-lasting.</p>
+
+        <div class="hero-actions-row stagger-4">
+          <button class="btn-shimmer cursor-hover" id="pc-add-btn" onclick="app.stageActivePerfume()">
+            <span>Add To Bag</span>
+            <span style="opacity: 0.5;">•</span>
+            <span id="pc-price-label">₹6,800</span>
+          </button>
+          <button class="btn-elegant-line cursor-hover" onclick="app.showScreen('about')">Our Story</button>
+        </div>
+      </div>
+
+      <div class="hero-stage-section">
+        <div class="ambient-stage-plate"></div>
+
+        <div class="desktop-note-dot dot-t cursor-hover" onclick="app.displayNoteAlert('Top Note')">
+          <span>Top</span>
+          <span class="dot-tooltip" id="pc-top-note">Top Note: Saffron Oil</span>
+        </div>
+        <div class="desktop-note-dot dot-h cursor-hover" onclick="app.displayNoteAlert('Heart Note')">
+          <span>Heart</span>
+          <span class="dot-tooltip" id="pc-heart-note">Heart Note: Aged Oudh Core</span>
+        </div>
+        <div class="desktop-note-dot dot-b cursor-hover" onclick="app.displayNoteAlert('Base Note')">
+          <span>Base</span>
+          <span class="dot-tooltip" id="pc-base-note">Base Note: White Amber</span>
+        </div>
+
+        <div class="bottle-float-container cursor-hover" onclick="app.openSearchOverlay()" title="Browse perfumes">
+          <img src="./assets/oud_imperial.png" id="pc-bottle-image" alt="Luxury Perfume Bottle">
+        </div>
+      </div>
+    </div>
+
+    <!-- Live PC Tabbed Footer Navigation -->
+    <div class="desktop-footer-tabs">
+      <div class="tab-buttons-container" id="pc-footer-tabs-box"></div>
+    </div>
+
+
+    <!-- SMARTPHONE CARD STAGE -->
+    <div class="mobile-premium-app-container">
+      <div class="mobile-bottle-stage-card cursor-hover stagger-1" onclick="app.openSearchOverlay()">
+        <span class="mobile-badge-pill" id="mobile-stock-pill">Available</span>
+        <div class="mobile-watermark-background" id="mobile-watermark-text">OUDH</div>
+        <div class="mobile-stage-image-wrapper">
+          <img src="./assets/oud_imperial.png" id="mobile-bottle-image" alt="Perfume Scent">
+        </div>
+      </div>
+
+      <div class="mobile-info-sheet stagger-2">
+        <div class="mobile-pagination-dots" id="mobile-dots-container" style="margin-bottom: 24px;"></div>
+        
+        <div class="mobile-notes-chips-container stagger-3">
+          <button class="note-chip-btn cursor-hover" onclick="app.displayNoteAlert('Top Note')">
+            <span>Top</span>
+            <span id="mobile-chip-top">Saffron Oil</span>
+          </button>
+          <button class="note-chip-btn cursor-hover" onclick="app.displayNoteAlert('Heart Note')">
+            <span>Heart</span>
+            <span id="mobile-chip-heart">Aged Oudh Core</span>
+          </button>
+          <button class="note-chip-btn cursor-hover" onclick="app.displayNoteAlert('Base Note')">
+            <span>Base</span>
+            <span id="mobile-chip-base">White Amber</span>
+          </button>
+        </div>
+
+        <span
+          style="font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-gold); text-transform: uppercase;">Pure
+          Perfume Extract</span>
+        <h2 class="mobile-perfume-name" id="mobile-title-label"
+          style="margin-top: 4px; margin-bottom: 6px; font-size: 2.5rem;">Oud Imperial</h2>
+
+        <span class="mobile-price-tag" id="mobile-price-label"
+          style="display: block; font-size: 1.6rem; font-weight: 700; color: var(--text-dark); font-family: var(--font-serif); margin-bottom: 24px;">₹6,800</span>
+
+        <button class="btn-shimmer cursor-hover" id="mobile-add-btn"
+          style="width: 100%; min-height: 56px; justify-content: center; font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase; border-radius: 100px; margin-bottom: 24px;"
+          onclick="app.stageActivePerfume()">
+          Add To Bag
+        </button>
+
+        <p class="mobile-perfume-desc" id="mobile-desc-label"
+          style="margin-bottom: 24px; font-size: 0.9rem; line-height: 1.6; color: var(--text-gray); padding: 0 16px;">Rich
+          aged oudh oil balanced with soft saffron and clean white amber. Simple, premium, and very long-lasting.</p>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ENHANCED SEARCH OVERLAY -->
+  <div class="simple-search-overlay" id="search-overlay-view">
+    <div class="search-input-header">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2.5"
+        style="margin-right: 16px;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="live-search-string" placeholder="Search by name, scent, or note..."
+        oninput="app.triggerSearchEngine()" autocomplete="off">
+      <button
+        style="background: none; border: none; font-size: 2.5rem; font-weight: 300; cursor: pointer; color: var(--text-dark); transition: transform 0.3s ease; padding: 0 10px;"
+        onclick="app.closeSearchOverlay()" class="cursor-hover" onmouseover="this.style.transform='rotate(90deg)'"
+        onmouseout="this.style.transform='rotate(0deg)'">×</button>
+    </div>
+    <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 24px; padding: 0 10px;">
+      <h3 id="search-results-title"
+        style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text-gray); letter-spacing: 2px; text-transform: uppercase;">
+        Discover Collection</h3>
+    </div>
+    <div class="clean-cards-grid" id="search-cards-grid-box"></div>
+  </div>
+
+
+  <!-- ==================== SCREEN 2: OUR STORY ==================== -->
+  <section class="view-pane" id="screen-about">
+    <div style="max-width: 800px; margin: 0 auto; padding: 20px 5vw;">
+      <span class="scent-step-tag">Pure Origin</span>
+      <h1 class="scent-main-heading" style="font-size: clamp(2.2rem, 5vw, 4rem); margin-bottom: 40px;">Crafted purely in
+        the green hills of Kerala.</h1>
+
+      <div
+        style="width: 100%; aspect-ratio: 16/9; background: var(--bg-soft); border-radius: 24px; overflow: hidden; margin-bottom: 40px; border: 1px solid var(--border-delicate);">
+        <img src="./assets/rose_elixir.png"
+          style="width: 100%; height: 100%; object-fit: cover; object-position: center 30%;">
+      </div>
+
+      <div style="font-size: 1.05rem; line-height: 1.8; color: var(--text-gray);">
+        <p style="margin-bottom: 20px;">Welcome to <strong>ALH Perfumes</strong>. We craft simple, concentrated organic
+          perfumes without adding harsh commercial alcohol chemicals. Our direct focus is pure scent extraction that
+          stays perfectly beautiful on your clothing for over 24 hours.</p>
+        <p style="margin-bottom: 40px;">Because we ship directly to your home from our private studio in Kerala, you
+          skip high retail distributor markups. You get true luxury grade perfumes at fair, direct prices.</p>
+
+        <div
+          style="border-top: 1px solid var(--border-delicate); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <span
+              style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; display: block;">Concierge
+              Support</span>
+            <a href="mailto:zackedt@gmail.com" class="cursor-hover"
+              style="color: var(--accent-gold); font-weight: 700; text-decoration: none;">zackedt@gmail.com</a>
+          </div>
+          <button class="btn-elegant-line cursor-hover" onclick="app.showScreen('home')">View Perfumes</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== SCREEN 3: PLACE ORDER ==================== -->
+  <section class="view-pane" id="screen-checkout">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 20px 5vw;">
+      <h1 class="scent-main-heading" style="font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 40px;">Place Your Order
+      </h1>
+
+      <form onsubmit="app.commitOrderPlacement(event)">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 60px;">
+
+          <div>
+            <span
+              style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; display: block; margin-bottom: 24px;">Shipping
+              Address</span>
+
+            <div
+              style="background: var(--bg-main); border: 1px solid var(--border-strong); border-radius: 20px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+              <div class="checkout-floating-input" style="border-bottom: 1px solid var(--border-delicate);">
+                <input type="text" id="ship-inp-name" placeholder=" " required autocomplete="name">
+                <label>Full Name</label>
+              </div>
+              <div class="checkout-floating-input" style="border-bottom: 1px solid var(--border-delicate);">
+                <input type="tel" id="ship-inp-phone" placeholder=" " required autocomplete="tel">
+                <label>Mobile Number</label>
+              </div>
+              <div class="checkout-floating-input" style="border-bottom: 1px solid var(--border-delicate);">
+                <input type="text" id="ship-inp-addr" placeholder=" " required autocomplete="street-address">
+                <label>Street Address / House Number</label>
+              </div>
+              <div style="display: flex;">
+                <div class="checkout-floating-input" style="border-right: 1px solid var(--border-delicate); flex: 1;">
+                  <input type="text" id="ship-inp-city" placeholder=" " required autocomplete="address-level2">
+                  <label>City</label>
+                </div>
+                <div class="checkout-floating-input" style="flex: 1;">
+                  <input type="text" id="ship-inp-pin" placeholder=" " required autocomplete="postal-code">
+                  <label>Pincode</label>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style="background: var(--bg-soft); padding: 20px; border-radius: 16px; border: 1px dashed var(--accent-gold); display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.5"
+                style="flex-shrink: 0; margin-top: 2px;">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <div>
+                <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dark); display: block;">Payment:
+                  Secured via Razorpay</span>
+                <p style="font-size: 0.75rem; color: var(--text-gray); margin-top: 4px; line-height: 1.4;">Pay securely
+                  using UPI (GPay, PhonePe), Cards, NetBanking, or Wallets via the Razorpay gateway popup.</p>
+              </div>
+            </div>
+
+            <div
+              style="background: var(--bg-soft); padding: 20px; border-radius: 16px; border: 1px solid var(--border-delicate); display: flex; align-items: flex-start; gap: 12px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                style="flex-shrink: 0; margin-top: 2px;">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              <div>
+                <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-dark); display: block;">Shipping:
+                  India Post Delivery</span>
+                <p style="font-size: 0.75rem; color: var(--text-gray); margin-top: 4px; line-height: 1.4;">Dispatched
+                  via India Post Speed Post directly from our private studio in Kerala. Live tracking details provided
+                  upon dispatch.</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="background: var(--bg-soft); padding: 32px; border-radius: 24px; border: 1px solid var(--border-delicate); height: fit-content;">
+            <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 24px;">Bag Summary</h3>
+            <div id="checkout-bag-rows" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+            </div>
+
+            <div style="border-top: 1px solid var(--border-delicate); padding-top: 20px;">
+              <div
+                style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 12px;">
+                <span>Perfume Items Price</span>
+                <span id="chk-sum-price">₹0</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 20px;">
+                <span>Kerala Delivery Fee</span>
+                <span id="chk-sum-fee">₹40</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; border-top: 1px solid var(--border-strong); padding-top: 16px; color: var(--text-dark);">
+                <span>Total Payable</span>
+                <span id="chk-sum-total" style="color: var(--accent-gold);">₹0</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-shimmer cursor-hover"
+              style="width: 100%; justify-content: center; margin-top: 32px;">Confirm Order Now</button>
+            <button type="button" class="btn-elegant-line cursor-hover"
+              style="width: 100%; justify-content: center; margin-top: 12px;" onclick="app.openDrawer('bag')">Edit Items
+              in Bag</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </section>
+
+
+  <!-- ==================== SCREEN 4: SUCCESS CONFIRMATION ==================== -->
+  <section class="view-pane" id="screen-success">
+    <div style="max-width: 600px; margin: 0 auto; text-align: center; padding: 40px 5vw;">
+      <span class="pill-tag"
+        style="background: var(--text-dark); color: var(--bg-main); padding: 8px 16px; font-size: 0.8rem;">Order Placed
+        Successfully!</span>
+      <h1 class="scent-main-heading" style="font-size: clamp(2rem, 5vw, 3.5rem); margin: 24px 0;">Thank you for your
+        order.</h1>
+      <p style="font-size: 1.05rem; color: var(--text-gray); margin-bottom: 40px;">Your pure perfume setup is staged for
+        expert manual packaging and courier sorting.</p>
+
+      <div
+        style="background: var(--bg-soft); padding: 24px 32px; border-radius: 20px; border: 1px solid var(--border-delicate); display: inline-block; margin-bottom: 40px; text-align: left;">
+        <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; display: block;">Your
+          Unique Tracking Number</span>
+        <span id="success-tracked-id"
+          style="font-family: monospace; font-size: 1.75rem; font-weight: 700; color: var(--text-dark);">ALH-XXXXXX</span>
+      </div>
+
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn-elegant-line cursor-hover" onclick="app.triggerPrintSheet()">Print Bill</button>
+        <button class="btn-shimmer cursor-hover" onclick="app.showScreen('orders')">View My Orders</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== SCREEN 5: MY ACCOUNT ==================== -->
+  <section class="view-pane" id="screen-account" style="background: var(--bg-soft);">
+    <div class="luxury-account-container">
+
+      <!-- Left Panel: Profile Summary Card -->
+      <div class="account-sidebar-card">
+        <div class="luxury-avatar-wrapper">
+          <div class="avatar-ring-outer"></div>
+          <div class="avatar-ring-inner"></div>
+          <div class="profile-avatar-circle">
+            <span id="profile-avatar-initial">A</span>
+          </div>
+        </div>
+
+        <h2 class="profile-display-name" id="profile-greet-name">ALH Member</h2>
+        <p class="profile-display-email" id="profile-greet-email">member@alh.in</p>
+
+        <div class="sidebar-stat-strip" style="justify-content: center; padding-top: 16px;">
+          <div class="stat-pill">
+            <span class="stat-val" id="profile-stat-orders">0</span>
+            <span class="stat-lbl">Active Orders</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Settings Stack -->
+      <div class="account-main-stack">
+
+        <!-- Section 1: Purchases -->
+        <div class="settings-group-section">
+          <h3 class="settings-section-title">Orders & Tracking</h3>
+          <div class="premium-settings-card">
+            <div class="settings-row cursor-hover" id="profile-active-consignment-row" onclick="app.openActiveTracking()">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box gold">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                      d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                  </svg>
+                </div>
+                <span class="row-label">Active Consignment</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="badge-transit" id="profile-transit-badge">0 in Transit</span>
+                <svg class="chevron-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="var(--text-light)" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="gold-gradient-divider"></div>
+            <div class="settings-row cursor-hover" onclick="app.showScreen('orders')">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <span class="row-label">Purchase History</span>
+              </div>
+              <svg class="chevron-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="var(--text-light)" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Account Settings -->
+        <div class="settings-group-section">
+          <h3 class="settings-section-title">Account Settings</h3>
+          <div class="premium-settings-card">
+            <div class="settings-row cursor-hover" onclick="app.toast('Manage saved addresses')">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                  <span class="row-label">Saved Addresses</span>
+                  <span class="row-sublabel" id="profile-saved-address">Loading...</span>
+                </div>
+              </div>
+              <svg class="chevron-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="var(--text-light)" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+            <div class="gold-gradient-divider"></div>
+            <div class="settings-row cursor-hover" onclick="app.toast('Manage payment methods')">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                </div>
+                <span class="row-label">Payment Vault</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="payment-card-vault">•••• 4928</span>
+                <svg class="chevron-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="var(--text-light)" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Admin Section (Injected ONLY for verified store owners) -->
+        <div id="profile-admin-section"></div>
+
+        <!-- Section 3: Support & Security -->
+        <div class="settings-group-section">
+          <h3 class="settings-section-title">Support & Security</h3>
+          <div class="premium-settings-card">
+            <div class="settings-row cursor-hover" onclick="app.createDemoOrder()">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box" style="color: var(--accent-gold);">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                  </svg>
+                </div>
+                <span class="row-label" style="color: var(--accent-gold);">Create Demo Tracking Order</span>
+              </div>
+            </div>
+            <div class="gold-gradient-divider"></div>
+            <div class="settings-row cursor-hover" onclick="app.toast('Opening Concierge WhatsApp...')">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </div>
+                <span class="row-label">Concierge Chat</span>
+              </div>
+              <svg class="chevron-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="var(--text-light)" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+            <div class="gold-gradient-divider"></div>
+            <div class="settings-row cursor-hover" onclick="app.logoutUser()">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="row-icon-box logout-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                </div>
+                <span class="row-label logout-text">Secure Sign Out</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCREEN 7: ORDERS ==================== -->
+  <section class="view-pane" id="screen-orders" style="background: var(--bg-soft);">
+    <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px; padding-bottom: 120px;">
+      <div style="display: flex; align-items: center; margin-bottom: 32px; gap: 16px;">
+        <button class="btn-elegant-line cursor-hover"
+          style="padding: 8px; border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;"
+          onclick="app.showScreen('account')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h2
+          style="font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700; color: var(--text-dark); margin: 0;">
+          Purchase History</h2>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;" id="client-orders-cards-container">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Dynamic Admin Screen (Injected dynamically for verified admins only) -->
+
+
+  <!-- ==================== PREMIUM IOS-STYLE BOTTOM DOCK ==================== -->
+  <nav class="ios-style-bottom-dock">
+    <button class="dock-icon-tab active cursor-hover" onclick="app.showScreen('home')" title="Perfumes">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon
+          points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+        </polygon>
+      </svg>
+      <span>Home</span>
+    </button>
+    <button class="dock-icon-tab cursor-hover" onclick="app.openSearchOverlay()" title="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <span>Search</span>
+    </button>
+    <button class="dock-icon-tab cursor-hover" onclick="app.openDrawer('bag')" title="Your Bag">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span>Bag</span>
+    </button>
+    <button class="dock-icon-tab cursor-hover" onclick="app.showScreen('about')" title="Story">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      <span>Story</span>
+    </button>
+    <button class="dock-icon-tab cursor-hover" onclick="app.routeAccountFlow()" title="Account">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+
+  <!-- ==================== MINIMALIST BAG DRAWER ==================== -->
+  <div class="native-bottom-sheet" id="drawer-bag">
+
+    <div class="sheet-drag-handle"></div>
+
+    <div class="sheet-header-box">
+      <div>
+        <span class="sheet-title-text">Your Bag</span>
+      </div>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-dark);"
+        onclick="app.closeDrawer('bag')" class="cursor-hover">×</button>
+    </div>
+
+    <div class="sheet-scroll-content" id="sheet-bag-list-div"></div>
+
+    <div class="sheet-footer-box">
+      <div
+        style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 8px;">
+        <span>Items Subtotal</span><span id="sheet-subtotal-lbl"
+          style="font-weight: 600; color: var(--text-dark);">₹0</span>
+      </div>
+      <div
+        style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-gray); margin-bottom: 16px;">
+        <span>Delivery Fee</span><span id="sheet-fee-lbl" style="font-weight: 600; color: var(--text-dark);">₹40</span>
+      </div>
+      <div
+        style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 12px; margin-bottom: 24px;">
+        <span>Total Payable</span><span id="sheet-total-lbl" style="color: var(--accent-gold);">₹0</span>
+      </div>
+      <button class="btn-shimmer cursor-hover" style="width: 100%; justify-content: center;"
+        onclick="app.showScreen('checkout')">Proceed to Checkout</button>
+    </div>
+  </div>
+
+
+  <!-- Dynamic Add/Edit Perfume Drawer (Injected dynamically for verified admins only) -->
+
+
+  <!-- GLOBAL DRAWER BACKDROP -->
+  <div class="drawer-backdrop" id="global-drawer-backdrop" onclick="app.closeAllDrawers()"></div>
+
+  <!-- NATIVE BOTTOM SHEET: RETURN CLAIM -->
+  <div class="native-bottom-sheet" id="drawer-return-claim">
+    <div class="sheet-drag-handle"></div>
+    <div class="sheet-header-box">
+      <span class="sheet-title-text">Return Item</span>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-dark);"
+        onclick="app.closeDrawer('return-claim')" class="cursor-hover">×</button>
+    </div>
+    <form onsubmit="app.commitReturnClaim(event)"
+      style="display: flex; flex-direction: column; height: calc(100% - 75px);">
+      <div class="sheet-scroll-content">
+        <input type="hidden" id="claim-order-id-hid">
+        <p style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 16px;">Order ID: <strong
+            id="claim-id-visible"></strong></p>
+        <div class="clean-field"><label>Reason</label><textarea id="claim-reason-txt" required rows="4"></textarea>
+        </div>
+      </div>
+      <div class="sheet-footer-box">
+        <button type="submit" class="btn-shimmer cursor-hover" style="width: 100%; justify-content: center;">Submit
+          Return</button>
+      </div>
+    </form>
+  </div>
+
+
+  <!-- NATIVE BOTTOM SHEET: AUTHENTICATION -->
+  <div class="native-bottom-sheet" id="drawer-auth">
+    <div class="sheet-drag-handle"></div>
+    <div class="sheet-header-box">
+      <span class="sheet-title-text" id="auth-title-text">Account Portal</span>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-dark);"
+        onclick="app.closeDrawer('auth')" class="cursor-hover">×</button>
+    </div>
+    <form onsubmit="app.commitAuthFlow(event)"
+      style="display: flex; flex-direction: column; height: calc(100% - 75px);">
+      <div class="sheet-scroll-content">
+        <div style="text-align: center; margin-bottom: 32px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.2"
+            stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px; opacity: 0.8;">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-dark); margin-bottom: 8px;">
+            Private Access</h2>
+          <p style="font-size: 0.95rem; color: var(--text-gray); line-height: 1.6;" id="auth-subtitle-text">Sign in
+            securely to access your private member profile.</p>
+        </div>
+
+        <!-- Social Native Overrides -->
+        <div id="auth-social-btns" style="margin-bottom: 24px;">
+          <button type="button" class="btn-elegant-line cursor-hover" style="width: 100%; justify-content: center;"
+            onclick="app.triggerGoogleAuth()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 12px;">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4" />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853" />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05" />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335" />
+            </svg>
+            Continue with Google
+          </button>
+          <button type="button" class="btn-elegant-line cursor-hover"
+            style="width: 100%; justify-content: center; margin-top: 12px;" onclick="app.triggerAppleAuth()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-dark)" style="margin-right: 12px;">
+              <path
+                d="M16.36 12.36c0-2.43 1.99-3.6 2.08-3.65-1.12-1.64-2.88-1.87-3.51-1.89-1.5-.15-2.92.89-3.69.89-.76 0-1.94-.87-3.17-.85-1.59.02-3.05.92-3.88 2.37-1.68 2.92-.43 7.24 1.2 9.61.8 1.16 1.74 2.45 3 2.4 1.21-.05 1.69-.78 3.16-.78 1.46 0 1.9.78 3.18.76 1.3-.02 2.11-1.18 2.89-2.33 1-1.46 1.4-2.88 1.42-2.95-.03-.02-2.68-1.03-2.68-4.08zm-1.89-6.32c.65-.8 1.09-1.91.97-3.02-1.02.04-2.16.68-2.83 1.48-.59.69-1.12 1.83-.98 2.91 1.14.09 2.19-.57 2.84-1.37z">
+              </path>
+            </svg>
+            Continue with Apple
+          </button>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 24px;" id="auth-reveal-email-box">
+          <button type="button"
+            style="background: none; border: none; color: var(--text-gray); font-size: 0.95rem; text-decoration: underline; cursor: pointer; font-weight: 500;"
+            class="cursor-hover" onclick="app.revealEmailAuth()">Use email instead</button>
+        </div>
+
+        <div id="auth-email-section" style="display: none;">
+          <input type="hidden" id="auth-mode-hidden" value="login">
+
+          <div class="checkout-floating-input auth-transition-box" id="auth-name-container">
+            <input type="text" id="auth-inp-name" placeholder=" ">
+            <label>Full Name</label>
+          </div>
+
+          <div class="checkout-floating-input"
+            style="border: 1px solid var(--border-delicate); border-radius: 16px; margin-bottom: 16px; overflow: hidden;">
+            <input type="email" id="auth-inp-email" placeholder=" " autocomplete="email">
+            <label>Email Address</label>
+          </div>
+
+          <div class="checkout-floating-input"
+            style="border: 1px solid var(--border-delicate); border-radius: 16px; margin-bottom: 16px; overflow: hidden; position: relative;">
+            <input type="password" id="auth-inp-pass" placeholder=" " autocomplete="current-password"
+              style="padding-right: 50px;">
+            <label>Secure Password</label>
+            <button type="button"
+              style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-gray); cursor: pointer; padding: 4px;"
+              onclick="app.togglePasswordVisibility('auth-inp-pass', this)" title="Show/Hide Password"
+              class="cursor-hover">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <div style="text-align: right; margin-bottom: 24px;" id="auth-forgot-box">
+            <button type="button"
+              style="background: none; border: none; color: var(--text-light); font-size: 0.8rem; text-decoration: underline; cursor: pointer;"
+              class="cursor-hover"
+              onclick="app.toast('A password reset link will be sent to your email after Firebase is connected.')">Forgot
+              Password?</button>
+          </div>
+
+          <div style="text-align: center;">
+            <button type="button"
+              style="background: none; border: none; color: var(--text-gray); font-size: 0.85rem; text-decoration: underline; cursor: pointer; font-weight: 500;"
+              class="cursor-hover" onclick="app.toggleAuthMode()" id="auth-toggle-btn">New here? Create an account
+              instead.</button>
+          </div>
+        </div>
+      </div>
+      <div class="sheet-footer-box" id="auth-submit-footer" style="display: none;">
+        <button type="submit" class="btn-shimmer cursor-hover" style="width: 100%; justify-content: center;"
+          id="auth-submit-btn">Authenticate</button>
+      </div>
+    </form>
+  </div>
+
+
+  <div id="hidden-bill-container" style="display: none;"></div>
+  <div class="toast-anchor" id="toast-hub-div"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+
+</html>
