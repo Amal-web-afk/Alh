@@ -177,6 +177,7 @@ class LuxuryKineticApp {
     this.activeIndex = 0;
     this.activeScreenId = 'home';
     this.cachedOrderId = null;
+    this.searchCategory = 'all';
 
 
     // Premium catalog base mappings
@@ -848,38 +849,127 @@ class LuxuryKineticApp {
     if (el) el.classList.remove('open');
   }
 
+  setSearchCategory(cat) {
+    this.searchCategory = cat;
+    
+    // Toggle active state on category buttons
+    const badges = document.querySelectorAll('.search-filter-badge');
+    badges.forEach(b => {
+      b.classList.remove('active');
+      if (b.getAttribute('onclick').includes(`'${cat}'`)) {
+        b.classList.add('active');
+      }
+    });
+
+    this.triggerSearchEngine();
+  }
+
+  clearSearchInput() {
+    const inp = document.getElementById('live-search-string');
+    if (inp) {
+      inp.value = '';
+      inp.focus();
+    }
+    this.triggerSearchEngine();
+  }
+
   triggerSearchEngine() {
     const inp = document.getElementById('live-search-string');
     const grid = document.getElementById('search-cards-grid-box');
     const titleEl = document.getElementById('search-results-title');
+    const clearBtn = document.getElementById('search-clear-btn');
     if (!grid || !inp) return;
 
     const q = inp.value.toLowerCase().trim();
-    
+    if (clearBtn) {
+      clearBtn.style.display = q ? 'block' : 'none';
+    }
+
     let matches = this.perfumes;
-    
+
+    // 1. Text Query Filter
     if (q) {
-      matches = this.perfumes.filter(p => 
+      matches = matches.filter(p => 
         p.name.toLowerCase().includes(q) || 
         p.desc.toLowerCase().includes(q) ||
         (p.notes && p.notes.top.toLowerCase().includes(q)) ||
         (p.notes && p.notes.heart.toLowerCase().includes(q)) ||
         (p.notes && p.notes.base.toLowerCase().includes(q))
       );
-      if (titleEl) titleEl.textContent = `Search Results (${matches.length})`;
+    }
+
+    // 2. Scent Tag Filter
+    if (this.searchCategory && this.searchCategory !== 'all') {
+      matches = matches.filter(p => {
+        const name = p.name.toLowerCase();
+        const desc = p.desc.toLowerCase();
+        const top = (p.notes && p.notes.top) ? p.notes.top.toLowerCase() : '';
+        const heart = (p.notes && p.notes.heart) ? p.notes.heart.toLowerCase() : '';
+        const base = (p.notes && p.notes.base) ? p.notes.base.toLowerCase() : '';
+
+        const fullText = `${name} ${desc} ${top} ${heart} ${base}`;
+
+        if (this.searchCategory === 'oudh') {
+          return fullText.includes('oud');
+        } else if (this.searchCategory === 'floral') {
+          return fullText.includes('rose') || fullText.includes('orchid') || fullText.includes('flower') || fullText.includes('jasmine') || fullText.includes('saffron') || fullText.includes('elixir');
+        } else if (this.searchCategory === 'musk') {
+          return fullText.includes('musk');
+        } else if (this.searchCategory === 'fresh') {
+          return fullText.includes('santal') || fullText.includes('amber') || fullText.includes('citrus') || fullText.includes('blanc') || fullText.includes('fresh');
+        }
+        return true;
+      });
+    }
+
+    if (q || (this.searchCategory && this.searchCategory !== 'all')) {
+      if (titleEl) titleEl.textContent = `Matching Formulations (${matches.length})`;
     } else {
       if (titleEl) titleEl.textContent = 'Discover Collection';
     }
 
     grid.innerHTML = '';
+
+    // "No Results" suggestions block!
     if (matches.length === 0) {
-      grid.innerHTML = `<p style="color: var(--text-light); font-size: 1.1rem; padding: 0 10px;">No fragrance formulations detected matching "${q}".</p>`;
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 48px 24px; border-radius: 28px; background: var(--bg-soft); border: 1px dashed var(--border-strong); text-align: center; max-width: 600px; margin: 40px auto 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+          <h4 style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 8px; color: var(--text-dark); font-weight: 600;">No formulations found</h4>
+          <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.6;">We couldn't find matches for your selection. Explore some of our highly-coveted signature fragrances instead:</p>
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;" id="search-suggested-box"></div>
+        </div>
+      `;
+      
+      const suggestedBox = document.getElementById('search-suggested-box');
+      if (suggestedBox) {
+        const suggestions = this.perfumes.slice(0, 3);
+        suggestions.forEach(p => {
+          const sBtn = document.createElement('button');
+          sBtn.className = 'btn-elegant-line cursor-hover';
+          sBtn.style.padding = '10px 20px';
+          sBtn.style.fontSize = '0.72rem';
+          sBtn.style.textTransform = 'uppercase';
+          sBtn.style.letterSpacing = '1px';
+          sBtn.textContent = p.name;
+          sBtn.onclick = () => {
+            const found = this.perfumes.findIndex(i => i.id === p.id);
+            if (found !== -1) {
+              this.closeSearchOverlay();
+              this.showScreen('home');
+              setTimeout(() => this.selectItemIndex(found), 350);
+            }
+          };
+          suggestedBox.appendChild(sBtn);
+        });
+      }
       return;
     }
 
-    matches.forEach(p => {
+    matches.forEach((p, index) => {
       const card = document.createElement('div');
       card.className = 'perfume-item-card cursor-hover';
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(15px)';
       card.onclick = () => {
         const found = this.perfumes.findIndex(i => i.id === p.id);
         if (found !== -1) {
@@ -895,7 +985,9 @@ class LuxuryKineticApp {
 
       card.innerHTML = `
         ${tag}
-        <img src="${p.image}" alt="${p.name}">
+        <div class="perfume-image-wrapper">
+          <img src="${p.image}" alt="${p.name}">
+        </div>
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
           <strong style="font-family: var(--font-serif); font-size: 1.15rem;">${p.name}</strong>
           <span style="color: var(--accent-gold); font-weight: 700;">₹${p.price.toLocaleString()}</span>
@@ -904,6 +996,13 @@ class LuxuryKineticApp {
         <button class="btn-shimmer" style="padding: 6px 16px; font-size: 0.65rem; min-height: 38px; margin-top: auto;" onclick="event.stopPropagation(); app.appendItemToBag('${p.id}')">Add To Bag</button>
       `;
       grid.appendChild(card);
+
+      // Staggered premium animations
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+        card.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+      }, index * 45);
     });
   }
 

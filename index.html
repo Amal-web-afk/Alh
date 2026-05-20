@@ -180,11 +180,22 @@
       </svg>
       <input type="text" id="live-search-string" placeholder="Search by name, scent, or note..."
         oninput="app.triggerSearchEngine()" autocomplete="off">
+      <button id="search-clear-btn" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-gray); display: none; padding: 0 16px; transition: color 0.3s;" onclick="app.clearSearchInput()" class="cursor-hover">✕</button>
       <button
         style="background: none; border: none; font-size: 2.5rem; font-weight: 300; cursor: pointer; color: var(--text-dark); transition: transform 0.3s ease; padding: 0 10px;"
         onclick="app.closeSearchOverlay()" class="cursor-hover" onmouseover="this.style.transform='rotate(90deg)'"
         onmouseout="this.style.transform='rotate(0deg)'">×</button>
     </div>
+
+    <!-- State-of-the-art Scent Category Filter Badges -->
+    <div id="search-tag-filters" style="display: flex; gap: 12px; max-width: 1200px; margin: 0 auto 32px auto; overflow-x: auto; padding: 4px 10px; scrollbar-width: none; -ms-overflow-style: none;">
+      <button class="search-filter-badge active cursor-hover" onclick="app.setSearchCategory('all')">All Formulation</button>
+      <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('oudh')">Oudh Core</button>
+      <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('floral')">Floral Nectar</button>
+      <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('musk')">Musk Oil</button>
+      <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('fresh')">Fresh & Warm Wood</button>
+    </div>
+
     <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 24px; padding: 0 10px;">
       <h3 id="search-results-title"
         style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text-gray); letter-spacing: 2px; text-transform: uppercase;">
