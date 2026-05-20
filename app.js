@@ -1475,56 +1475,7 @@ class LuxuryKineticApp {
     }
   }
 
-  async createDemoOrder() {
-    if (!this.currentUser) {
-      this.toast("Please sign in first to create a demo order.", true);
-      return;
-    }
-    
-    const demoId = "ALH-DEMO-" + Math.floor(100000 + Math.random() * 900000);
-    const demoOrder = {
-      id: demoId,
-      userId: this.currentUser.id,
-      date: new Date().toISOString(),
-      address: {
-        name: this.currentUser.name || "Demo User",
-        phone: "9876543210",
-        address: "123 Demo Street, Suite 400",
-        city: "Cochin",
-        state: "Kerala",
-        pincode: "682001"
-      },
-      items: [
-        {
-          id: "p1",
-          name: "Oud Imperial (Demo)",
-          price: 6800,
-          qty: 1,
-          image: "./assets/oud_imperial.png"
-        }
-      ],
-      subtotal: 6800,
-      fee: 40,
-      total: 6840,
-      status: "Shipped",
-      paymentId: "pay_demo_test",
-      paymentStatus: "Paid",
-      trackingRef: "EA123456789IN",
-      claimReason: null
-    };
 
-    try {
-      const oRef = doc(fbDb, "orders", demoOrder.id);
-      await setDoc(oRef, demoOrder);
-      this.orders.unshift(demoOrder);
-      this.commitAll();
-      this.toast("Demo order dispatched and tracking generated!");
-      this.refreshAccountProfile();
-    } catch (err) {
-      console.error("Failed to create demo order:", err);
-      this.toast("Failed to create demo order in cloud.", true);
-    }
-  }
 
   appendItemToBag(prodId) {
     const spec = this.perfumes.find(p => p.id === prodId);
