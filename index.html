@@ -172,23 +172,27 @@
 
   <!-- ENHANCED SEARCH OVERLAY -->
   <div class="simple-search-overlay" id="search-overlay-view">
+    <div class="search-watermark">SENSE</div>
+    
     <div class="search-input-header">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2.5"
-        style="margin-right: 16px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(184, 151, 104, 0.8)" stroke-width="2.5"
+        style="margin-right: 14px; flex-shrink: 0;">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" id="live-search-string" placeholder="Search by name, scent, or note..."
+      <input type="text" id="live-search-string" placeholder="Search by name, scent profile, or specific notes..."
         oninput="app.triggerSearchEngine()" autocomplete="off">
-      <button id="search-clear-btn" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-gray); display: none; padding: 0 16px; transition: color 0.3s;" onclick="app.clearSearchInput()" class="cursor-hover">✕</button>
-      <button
-        style="background: none; border: none; font-size: 2.5rem; font-weight: 300; cursor: pointer; color: var(--text-dark); transition: transform 0.3s ease; padding: 0 10px;"
-        onclick="app.closeSearchOverlay()" class="cursor-hover" onmouseover="this.style.transform='rotate(90deg)'"
-        onmouseout="this.style.transform='rotate(0deg)'">×</button>
+      <button id="search-clear-btn" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-light); display: none; padding: 0 12px; transition: color 0.3s;" onclick="app.clearSearchInput()" class="cursor-hover">✕</button>
+      <button class="search-close-btn cursor-hover" onclick="app.closeSearchOverlay()" title="Close search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </div>
 
     <!-- State-of-the-art Scent Category Filter Badges -->
-    <div id="search-tag-filters" style="display: flex; gap: 12px; max-width: 1200px; margin: 0 auto 32px auto; overflow-x: auto; padding: 4px 10px; scrollbar-width: none; -ms-overflow-style: none;">
+    <div id="search-tag-filters" class="cursor-hover">
       <button class="search-filter-badge active cursor-hover" onclick="app.setSearchCategory('all')">All Formulation</button>
       <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('oudh')">Oudh Core</button>
       <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('floral')">Floral Nectar</button>
@@ -196,10 +200,8 @@
       <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('fresh')">Fresh & Warm Wood</button>
     </div>
 
-    <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 24px; padding: 0 10px;">
-      <h3 id="search-results-title"
-        style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: var(--text-gray); letter-spacing: 2px; text-transform: uppercase;">
-        Discover Collection</h3>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 10px; position: relative; z-index: 5;">
+      <h3 id="search-results-title">Discover Collection</h3>
     </div>
     <div class="clean-cards-grid" id="search-cards-grid-box"></div>
   </div>
