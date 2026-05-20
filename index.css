@@ -504,32 +504,30 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #EBEBEB;
-  border-radius: 28px;
-  overflow: hidden;
-  box-shadow: 0 20px 45px rgba(184, 151, 104, 0.04), 0 10px 20px rgba(0,0,0,0.02);
-  border: 1.5px solid rgba(184, 151, 104, 0.2);
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  border: none;
   animation: cinematicFloat 5s infinite alternate ease-in-out;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bottle-float-container:hover {
-  transform: scale(1.04);
-  box-shadow: 0 25px 55px rgba(184, 151, 104, 0.1);
-  border-color: rgba(184, 151, 104, 0.35);
+  transform: scale(1.05);
 }
 
 .bottle-float-container img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 20px;
-  filter: contrast(1.3) brightness(0.93) saturate(1.2) drop-shadow(0 15px 30px rgba(0, 0, 0, 0.12));
+  padding: 0;
+  filter: contrast(1.22) brightness(0.95) saturate(1.15) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.16));
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bottle-float-container:hover img {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 
 .desktop-note-dot {
