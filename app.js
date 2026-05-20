@@ -37,6 +37,7 @@ const ADMIN_SCREEN_HTML = `
         <div style="display: flex; gap: 16px; overflow-x: auto;">
           <button class="pc-tab-link active cursor-hover" id="tab-btn-dash" onclick="app.switchCmsTab('dash')">Summary</button>
           <button class="pc-tab-link cursor-hover" id="tab-btn-prods" onclick="app.switchCmsTab('prods')">Perfumes</button>
+          <button class="pc-tab-link cursor-hover" id="tab-btn-cats" onclick="app.switchCmsTab('cats')">Categories</button>
           <button class="pc-tab-link cursor-hover" id="tab-btn-ords" onclick="app.switchCmsTab('ords')">Orders</button>
           <button class="pc-tab-link cursor-hover" id="tab-btn-rets" onclick="app.switchCmsTab('rets')">Returns</button>
           <button class="pc-tab-link cursor-hover" id="tab-btn-sets" onclick="app.switchCmsTab('sets')">Settings</button>
@@ -79,6 +80,19 @@ const ADMIN_SCREEN_HTML = `
           <table class="premium-table">
             <thead><tr><th>Image</th><th>Name & Description</th><th>Price</th><th>Stock Left</th><th>Action</th></tr></thead>
             <tbody id="cms-prods-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="cms-pane-cats" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <h3 style="font-family: var(--font-serif); font-size: 1.25rem;">All Scent Categories</h3>
+          <button class="btn-shimmer cursor-hover" style="padding: 12px 28px; font-size: 0.75rem; min-height: 44px;" onclick="app.triggerCategoryDrawer()">+ Add Category</button>
+        </div>
+        <div style="border: 1px solid var(--border-delicate); border-radius: 24px; overflow-x: auto;">
+          <table class="premium-table">
+            <thead><tr><th>Category Key</th><th>Display Name</th><th>Action</th></tr></thead>
+            <tbody id="cms-cats-tbody"></tbody>
           </table>
         </div>
       </div>
@@ -179,20 +193,54 @@ const ADMIN_DRAWER_HTML = `
     </form>
   </div>
 `;
-
-
+ 
+const CATEGORY_DRAWER_HTML = `
+  <div class="native-bottom-sheet" id="drawer-category-edit">
+    <div class="sheet-drag-handle"></div>
+    <div class="sheet-header-box">
+      <span class="sheet-title-text" id="drawer-cat-edit-title">Add Category</span>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-dark);" onclick="app.closeDrawer('category-edit')" class="cursor-hover">×</button>
+    </div>
+    <form id="cms-category-edit-form" style="display: flex; flex-direction: column; height: calc(100% - 75px);">
+      <div class="sheet-scroll-content">
+        <input type="hidden" id="edit-cat-id">
+        <div class="clean-field">
+          <label>Category Key (e.g. oudh, floral)</label>
+          <input type="text" id="edit-cat-key" placeholder="oudh" required pattern="[a-zA-Z0-9-]+" title="Only alphanumeric characters and hyphens allowed.">
+        </div>
+        <div class="clean-field">
+          <label>Display Name (e.g. Oudh Core)</label>
+          <input type="text" id="edit-cat-name" placeholder="Oudh Core" required>
+        </div>
+      </div>
+      <div class="sheet-footer-box">
+        <button type="submit" class="btn-shimmer cursor-hover" style="width: 100%; justify-content: center;">Save Category</button>
+      </div>
+    </form>
+  </div>
+`;
+ 
 class LuxuryKineticApp {
   constructor() {
     this.activeIndex = 0;
     this.activeScreenId = 'home';
     this.cachedOrderId = null;
     this.searchCategory = 'all';
-
-
+ 
     // Premium catalog base mappings
     localStorage.removeItem('alh_premium_prods'); // Force refresh to show new images
     this.perfumes = this.pullData('alh_premium_prods', []);
-
+ 
+    this.categories = this.pullData('alh_premium_cats', []);
+    if (this.categories.length === 0) {
+      this.categories = [
+        { id: 'oudh', name: 'Oudh Core' },
+        { id: 'floral', name: 'Floral Nectar' },
+        { id: 'musk', name: 'Musk Oil' },
+        { id: 'fresh', name: 'Fresh & Warm Wood' }
+      ];
+    }
+ 
     this.bag = this.pullData('alh_premium_bag', []);
     this.orders = this.pullData('alh_premium_orders', []);
     this.config = this.pullData('alh_premium_cfg', { fee: 40, rzpKey: 'rzp_test_ALHPerfumesKey' });
@@ -219,6 +267,7 @@ class LuxuryKineticApp {
 
   commitAll() {
     this.pushData('alh_premium_prods', this.perfumes);
+    this.pushData('alh_premium_cats', this.categories);
     this.pushData('alh_premium_bag', this.bag);
     this.pushData('alh_premium_orders', this.orders);
     this.pushData('alh_premium_cfg', this.config);
@@ -278,6 +327,54 @@ class LuxuryKineticApp {
     } catch (err) {
       console.error("Firestore syncLiveProducts error:", err);
     }
+  }
+
+  async syncLiveCategories() {
+    try {
+      const colRef = collection(fbDb, "categories");
+      const qSnap = await getDocs(colRef);
+      const catList = [];
+      if (!qSnap.empty) {
+        qSnap.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data && data.name) {
+            catList.push({ id: docSnap.id, ...data });
+          }
+        });
+      }
+
+      if (catList.length > 0) {
+        this.categories = catList;
+      } else {
+        const defaults = [
+          { id: 'oudh', name: 'Oudh Core' },
+          { id: 'floral', name: 'Floral Nectar' },
+          { id: 'musk', name: 'Musk Oil' },
+          { id: 'fresh', name: 'Fresh & Warm Wood' }
+        ];
+        for (const cat of defaults) {
+          await setDoc(doc(fbDb, "categories", cat.id), cat);
+        }
+        this.categories = defaults;
+      }
+      this.commitAll();
+      this.renderSearchCategoryBadges();
+    } catch (err) {
+      console.error("Firestore syncLiveCategories error:", err);
+    }
+  }
+
+  renderSearchCategoryBadges() {
+    const box = document.getElementById('search-tag-filters');
+    if (!box) return;
+    
+    let html = `<button class="search-filter-badge ${this.searchCategory === 'all' ? 'active' : ''} cursor-hover" onclick="app.setSearchCategory('all')">All Formulation</button>`;
+    
+    this.categories.forEach(cat => {
+      html += `<button class="search-filter-badge ${this.searchCategory === cat.id ? 'active' : ''} cursor-hover" onclick="app.setSearchCategory('${cat.id}')">${cat.name}</button>`;
+    });
+    
+    box.innerHTML = html;
   }
 
   async syncLiveUserProfile(user) {
@@ -426,6 +523,7 @@ class LuxuryKineticApp {
 
     // Connect to live Firestore collections in the background
     await this.syncLiveConfig();
+    await this.syncLiveCategories();
     await this.syncLiveProducts();
     this.setupFirebaseObserver();
   }
@@ -860,16 +958,7 @@ class LuxuryKineticApp {
 
   setSearchCategory(cat) {
     this.searchCategory = cat;
-    
-    // Toggle active state on category buttons
-    const badges = document.querySelectorAll('.search-filter-badge');
-    badges.forEach(b => {
-      b.classList.remove('active');
-      if (b.getAttribute('onclick').includes(`'${cat}'`)) {
-        b.classList.add('active');
-      }
-    });
-
+    this.renderSearchCategoryBadges();
     this.triggerSearchEngine();
   }
 
@@ -910,6 +999,10 @@ class LuxuryKineticApp {
     // 2. Scent Tag Filter
     if (this.searchCategory && this.searchCategory !== 'all') {
       matches = matches.filter(p => {
+        if (p.category) {
+          return p.category === this.searchCategory;
+        }
+
         const name = p.name.toLowerCase();
         const desc = p.desc.toLowerCase();
         const top = (p.notes && p.notes.top) ? p.notes.top.toLowerCase() : '';
@@ -919,15 +1012,15 @@ class LuxuryKineticApp {
         const fullText = `${name} ${desc} ${top} ${heart} ${base}`;
 
         if (this.searchCategory === 'oudh') {
-          return p.category === 'oudh' || (!p.category && fullText.includes('oud'));
+          return fullText.includes('oud');
         } else if (this.searchCategory === 'floral') {
-          return p.category === 'floral' || (!p.category && (fullText.includes('rose') || fullText.includes('orchid') || fullText.includes('flower') || fullText.includes('jasmine') || fullText.includes('saffron') || fullText.includes('elixir')));
+          return fullText.includes('rose') || fullText.includes('orchid') || fullText.includes('flower') || fullText.includes('jasmine') || fullText.includes('saffron') || fullText.includes('elixir');
         } else if (this.searchCategory === 'musk') {
-          return p.category === 'musk' || (!p.category && fullText.includes('musk'));
+          return fullText.includes('musk');
         } else if (this.searchCategory === 'fresh') {
-          return p.category === 'fresh' || (!p.category && (fullText.includes('santal') || fullText.includes('amber') || fullText.includes('citrus') || fullText.includes('blanc') || fullText.includes('fresh')));
+          return fullText.includes('santal') || fullText.includes('amber') || fullText.includes('citrus') || fullText.includes('blanc') || fullText.includes('fresh');
         }
-        return true;
+        return false;
       });
     }
 
@@ -1208,6 +1301,21 @@ class LuxuryKineticApp {
       this.initTouchDrawers();
     }
 
+    // 2b. Inject Category Drawer
+    if (!document.getElementById('drawer-category-edit')) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = CATEGORY_DRAWER_HTML.trim();
+      const drawerElement = tempDiv.firstChild;
+      document.body.appendChild(drawerElement);
+
+      const form = document.getElementById('cms-category-edit-form');
+      if (form) {
+        form.addEventListener('submit', (e) => this.commitSavedCategory(e));
+      }
+
+      this.initTouchDrawers();
+    }
+
     // 3. Inject Admin Profile Portal Row
     const adminSec = document.getElementById('profile-admin-section');
     if (adminSec) {
@@ -1239,6 +1347,9 @@ class LuxuryKineticApp {
 
     const adminDrawer = document.getElementById('drawer-perfume-edit');
     if (adminDrawer) adminDrawer.remove();
+ 
+    const catDrawer = document.getElementById('drawer-category-edit');
+    if (catDrawer) catDrawer.remove();
 
     const adminSec = document.getElementById('profile-admin-section');
     if (adminSec) adminSec.innerHTML = '';
@@ -1917,7 +2028,7 @@ class LuxuryKineticApp {
 
   // --- Secured Office Core Engine ---
   switchCmsTab(tabId) {
-    const tabs = ['dash', 'prods', 'ords', 'rets', 'sets'];
+    const tabs = ['dash', 'prods', 'cats', 'ords', 'rets', 'sets'];
     tabs.forEach(i => {
       const e = document.getElementById(`cms-pane-${i}`);
       const b = document.getElementById(`tab-btn-${i}`);
@@ -1948,6 +2059,7 @@ class LuxuryKineticApp {
 
     this.renderCmsLatestRows();
     this.renderCmsProductsTable();
+    this.renderCmsCategoriesTable();
     this.renderCmsOrdersMatrix();
     this.renderCmsReturnsMap();
     this.renderCmsSettingsMap();
@@ -2115,8 +2227,124 @@ class LuxuryKineticApp {
     });
   }
 
+  renderCmsCategoriesTable() {
+    const tbody = document.getElementById('cms-cats-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+ 
+    this.categories.forEach(cat => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-family: monospace; font-weight: 700;">${cat.id}</td>
+        <td><strong style="font-family: var(--font-serif);">${cat.name}</strong></td>
+        <td>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-elegant-line" style="padding: 4px 12px; font-size: 0.65rem; min-height: 28px;" onclick="app.triggerCategoryDrawer('${cat.id}')">Edit</button>
+            <button class="btn-shimmer" style="padding: 4px 12px; font-size: 0.65rem; background-color: #DC3545; min-height: 28px;" onclick="app.purgeCategory('${cat.id}')">Delete</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+ 
+  triggerCategoryDrawer(catId = null) {
+    const tEl = document.getElementById('drawer-cat-edit-title');
+    const idEl = document.getElementById('edit-cat-id');
+    const keyEl = document.getElementById('edit-cat-key');
+    const nameEl = document.getElementById('edit-cat-name');
+ 
+    if (catId) {
+      const cat = this.categories.find(c => c.id === catId);
+      if (cat) {
+        if (tEl) tEl.textContent = "Edit Category";
+        if (idEl) idEl.value = cat.id;
+        if (keyEl) {
+          keyEl.value = cat.id;
+          keyEl.disabled = true;
+        }
+        if (nameEl) nameEl.value = cat.name;
+      }
+    } else {
+      if (tEl) tEl.textContent = "Add Category";
+      if (idEl) idEl.value = '';
+      if (keyEl) {
+        keyEl.value = '';
+        keyEl.disabled = false;
+      }
+      if (nameEl) nameEl.value = '';
+    }
+ 
+    this.openDrawer('category-edit');
+  }
+ 
+  async commitSavedCategory(event) {
+    event.preventDefault();
+    const idVal = document.getElementById('edit-cat-id').value;
+    const keyVal = document.getElementById('edit-cat-key').value.trim().toLowerCase();
+    const nameVal = document.getElementById('edit-cat-name').value.trim();
+ 
+    const catSpec = {
+      id: idVal || keyVal,
+      name: nameVal
+    };
+ 
+    try {
+      await setDoc(doc(fbDb, "categories", catSpec.id), catSpec);
+ 
+      if (idVal) {
+        const idx = this.categories.findIndex(c => c.id === idVal);
+        if (idx !== -1) {
+          this.categories[idx] = catSpec;
+          this.toast("Category specifications successfully overridden.");
+        }
+      } else {
+        this.categories.push(catSpec);
+        this.toast(`Category "${catSpec.name}" successfully created.`);
+      }
+ 
+      this.commitAll();
+      this.closeDrawer('category-edit');
+      this.refreshCmsViews();
+      this.renderSearchCategoryBadges();
+    } catch (err) {
+      console.error("Error committing category to Firestore:", err);
+      this.toast("Failed to update category in cloud.", true);
+    }
+  }
+ 
+  async purgeCategory(catId) {
+    if (window.confirm("Are you confident you want to delete this scent category? Products assigned to it will fall back to keyword matching.")) {
+      try {
+        await deleteDoc(doc(fbDb, "categories", catId));
+        this.categories = this.categories.filter(c => c.id !== catId);
+        this.commitAll();
+        this.toast("Scent category decoupled.");
+        this.refreshCmsViews();
+        this.renderSearchCategoryBadges();
+      } catch (err) {
+        console.error("Error purging category from Firestore:", err);
+        this.toast("Failed to remove category from cloud.", true);
+      }
+    }
+  }
+ 
+  renderCmsCategorySelects() {
+    const select = document.getElementById('edit-inp-category');
+    if (!select) return;
+    select.innerHTML = '';
+ 
+    this.categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = cat.name;
+      select.appendChild(opt);
+    });
+  }
+ 
   // --- Dynamic Office Spec Changes ---
   triggerEditorDrawer(pId = null) {
+    this.renderCmsCategorySelects();
     const tEl = document.getElementById('drawer-edit-title');
     const idEl = document.getElementById('edit-inp-id');
     const nEl = document.getElementById('edit-inp-name');
