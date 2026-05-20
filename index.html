@@ -172,23 +172,17 @@
 
   <!-- ENHANCED SEARCH OVERLAY -->
   <div class="simple-search-overlay" id="search-overlay-view">
-    <div class="search-watermark">SENSE</div>
     
     <div class="search-input-header">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(184, 151, 104, 0.8)" stroke-width="2.5"
-        style="margin-right: 14px; flex-shrink: 0;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2"
+        style="margin-right: 16px; flex-shrink: 0;">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" id="live-search-string" placeholder="Search by name, scent profile, or specific notes..."
+      <input type="text" id="live-search-string" placeholder="Search our signature fragrances..."
         oninput="app.triggerSearchEngine()" autocomplete="off">
-      <button id="search-clear-btn" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-light); display: none; padding: 0 12px; transition: color 0.3s;" onclick="app.clearSearchInput()" class="cursor-hover">✕</button>
-      <button class="search-close-btn cursor-hover" onclick="app.closeSearchOverlay()" title="Close search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <button id="search-clear-btn" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-gray); display: none; padding: 0 12px; transition: color 0.3s;" onclick="app.clearSearchInput()" class="cursor-hover">✕</button>
+      <button class="search-close-btn cursor-hover" onclick="app.closeSearchOverlay()" title="Close search">✕</button>
     </div>
 
     <!-- State-of-the-art Scent Category Filter Badges -->
@@ -200,7 +194,7 @@
       <button class="search-filter-badge cursor-hover" onclick="app.setSearchCategory('fresh')">Fresh & Warm Wood</button>
     </div>
 
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 10px; position: relative; z-index: 5;">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 10px; position: relative; z-index: 5;">
       <h3 id="search-results-title">Discover Collection</h3>
     </div>
     <div class="clean-cards-grid" id="search-cards-grid-box"></div>
