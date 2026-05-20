@@ -159,6 +159,15 @@ const ADMIN_DRAWER_HTML = `
         <div class="clean-field">
           <label>Image Source</label><input type="text" id="edit-inp-img" value="./assets/oud_imperial.png" required>
         </div>
+        <div class="clean-field">
+          <label>Scent Category</label>
+          <select id="edit-inp-category" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--bg-main); color: var(--text-dark); font-family: var(--font-sans); outline: none;">
+            <option value="oudh">Oudh Core</option>
+            <option value="floral">Floral Nectar</option>
+            <option value="musk">Musk Oil</option>
+            <option value="fresh">Fresh & Warm Wood</option>
+          </select>
+        </div>
         <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold); display: block;">Scent Notes</span>
         <div class="clean-field" style="margin-bottom: 10px;"><input type="text" id="edit-inp-top" placeholder="Top Note"></div>
         <div class="clean-field" style="margin-bottom: 10px;"><input type="text" id="edit-inp-heart" placeholder="Heart Note"></div>
@@ -910,13 +919,13 @@ class LuxuryKineticApp {
         const fullText = `${name} ${desc} ${top} ${heart} ${base}`;
 
         if (this.searchCategory === 'oudh') {
-          return fullText.includes('oud');
+          return p.category === 'oudh' || (!p.category && fullText.includes('oud'));
         } else if (this.searchCategory === 'floral') {
-          return fullText.includes('rose') || fullText.includes('orchid') || fullText.includes('flower') || fullText.includes('jasmine') || fullText.includes('saffron') || fullText.includes('elixir');
+          return p.category === 'floral' || (!p.category && (fullText.includes('rose') || fullText.includes('orchid') || fullText.includes('flower') || fullText.includes('jasmine') || fullText.includes('saffron') || fullText.includes('elixir')));
         } else if (this.searchCategory === 'musk') {
-          return fullText.includes('musk');
+          return p.category === 'musk' || (!p.category && fullText.includes('musk'));
         } else if (this.searchCategory === 'fresh') {
-          return fullText.includes('santal') || fullText.includes('amber') || fullText.includes('citrus') || fullText.includes('blanc') || fullText.includes('fresh');
+          return p.category === 'fresh' || (!p.category && (fullText.includes('santal') || fullText.includes('amber') || fullText.includes('citrus') || fullText.includes('blanc') || fullText.includes('fresh')));
         }
         return true;
       });
@@ -2115,10 +2124,11 @@ class LuxuryKineticApp {
     const sEl = document.getElementById('edit-inp-stock');
     const dEl = document.getElementById('edit-inp-desc');
     const iEl = document.getElementById('edit-inp-img');
+    const catEl = document.getElementById('edit-inp-category');
     const topEl = document.getElementById('edit-inp-top');
     const heartEl = document.getElementById('edit-inp-heart');
     const baseEl = document.getElementById('edit-inp-base');
-
+ 
     if (pId) {
       const spec = this.perfumes.find(i => i.id === pId);
       if (spec) {
@@ -2129,6 +2139,7 @@ class LuxuryKineticApp {
         if (sEl) sEl.value = spec.stock;
         if (dEl) dEl.value = spec.desc;
         if (iEl) iEl.value = spec.image;
+        if (catEl) catEl.value = spec.category || 'oudh';
         if (topEl) topEl.value = spec.notes ? spec.notes.top : '';
         if (heartEl) heartEl.value = spec.notes ? spec.notes.heart : '';
         if (baseEl) baseEl.value = spec.notes ? spec.notes.base : '';
@@ -2141,11 +2152,12 @@ class LuxuryKineticApp {
       if (sEl) sEl.value = 20;
       if (dEl) dEl.value = '';
       if (iEl) iEl.value = './assets/oud_imperial.png';
+      if (catEl) catEl.value = 'oudh';
       if (topEl) topEl.value = '';
       if (heartEl) heartEl.value = '';
       if (baseEl) baseEl.value = '';
     }
-
+ 
     this.openDrawer('perfume-edit');
   }
 
@@ -2158,6 +2170,7 @@ class LuxuryKineticApp {
       price: Number(document.getElementById('edit-inp-price').value) || 0,
       stock: Number(document.getElementById('edit-inp-stock').value) || 0,
       desc: document.getElementById('edit-inp-desc').value.trim(),
+      category: document.getElementById('edit-inp-category').value,
       notes: {
         top: document.getElementById('edit-inp-top').value.trim() || 'Distilled Top Extract',
         heart: document.getElementById('edit-inp-heart').value.trim() || 'Aged Premium Attar Core',
